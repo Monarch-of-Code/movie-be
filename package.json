@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "tsx src/app/server.ts",
+    "postinstall": "prisma generate",
     "secret": "node src/utils/generate-secret/secret.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
