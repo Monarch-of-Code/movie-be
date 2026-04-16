@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+  model Users {
+    id        Int      @id @default(autoincrement())
+    name      String
+    email     String   @unique
+    password  String
+    refreshToken String?  // To store the refresh token for the user
+    expiresAt DateTime? // To store the expiry date of the refresh token
+
+    role      Role     @default(USER)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    watchlist watchlist[]
+    reviews   reviews[]
+  }
+
+
+model watchlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int       
+  movieId   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      Users    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, movieId])
+}
+
+
+model reviews {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  movieId   Int
+  review    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      Users    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, movieId])
+}
